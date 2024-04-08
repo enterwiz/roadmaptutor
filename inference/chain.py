@@ -3,9 +3,29 @@ from langchain_community.llms import Tongyi
 from langchain_core.output_parsers import JsonOutputParser
 
 from .model import TechniquePoint
-from .prompt import BASE_PROMPT, JOB_TECH_DETAIL_PROMPT, JOB_TECHTREE_PROMPT
+from .prompt import (
+    BASE_PROMPT,
+    JOB_TECH_DETAIL_PROMPT,
+    JOB_TECHTREE_PROMPT,
+    JOB_TASK_PROMPT,
+    JOB_INTRO_PROMPT,
+    JOB_PROMOTION_PROMPT,
+    JOB_FAQ_PROMPT,
+)
 
 llm = Tongyi()
+
+
+def gen_job_intro(job_name: str) -> str:
+    job_intro_prompt = PromptTemplate.from_template(BASE_PROMPT + JOB_INTRO_PROMPT)
+    chain = job_intro_prompt | llm
+    return chain.invoke({"job_name": job_name, "output_format": "text"})
+
+
+def gen_job_task(job_name: str) -> str:
+    job_intro_prompt = PromptTemplate.from_template(BASE_PROMPT + JOB_TASK_PROMPT)
+    chain = job_intro_prompt | llm
+    return chain.invoke({"job_name": job_name, "output_format": "text"})
 
 
 def gen_job_techtree(job_name: str) -> list[str]:
@@ -47,6 +67,18 @@ def gen_tech_detail(tech_name: str) -> list[str]:
     )
     chain = tech_detail_prompt | llm | parser
     return chain.invoke({"tech_name": tech_name, "output_format": "json"})
+
+
+def gen_job_promotion(job_name: str) -> str:
+    job_intro_prompt = PromptTemplate.from_template(BASE_PROMPT + JOB_PROMOTION_PROMPT)
+    chain = job_intro_prompt | llm
+    return chain.invoke({"job_name": job_name, "output_format": "text"})
+
+
+def gen_job_faq(job_name: str) -> str:
+    job_intro_prompt = PromptTemplate.from_template(BASE_PROMPT + JOB_FAQ_PROMPT)
+    chain = job_intro_prompt | llm
+    return chain.invoke({"job_name": job_name, "output_format": "text"})
 
 
 if __name__ == "__main__":
